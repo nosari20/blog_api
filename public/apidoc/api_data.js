@@ -110,6 +110,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "post.content",
+            "description": "<p>Content of the Post.</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
             "field": "post.category_id",
@@ -267,6 +274,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "comment.id",
+            "description": "<p>Id of the comment.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "comment.author",
             "description": "<p>Author of the comment.</p>"
           },
@@ -276,6 +290,13 @@ define({ "api": [
             "optional": false,
             "field": "comment.text",
             "description": "<p>Text of the comment.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "comment.created_at",
+            "description": "<p>Date of the comment.</p>"
           }
         ]
       }

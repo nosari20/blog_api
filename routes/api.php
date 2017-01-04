@@ -51,6 +51,7 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiSuccess {Number} post.id Id of the Post.
         * @apiSuccess {String} post.title Title of the Post.
         * @apiSuccess {String} post.subtitle Subtitle of the Post.
+        * @apiSuccess {String} post.content Content of the Post.
         * @apiSuccess {Number} post.category_id Category ID of the Post.
         * @apiSuccess {DateTime} post.created_at Date and time of the creation of the Post.
         * @apiSuccess {DateTime} post.updated_at Date and time of the last update of the Post.
@@ -67,6 +68,7 @@ Route::group(['prefix' => 'v1'], function () {
             if ($request->has('limit'))
                     $builder = $builder->take(intval($request->get('limit')));
             
+
 
             return response()->json($builder->get());
         });
@@ -109,8 +111,10 @@ Route::group(['prefix' => 'v1'], function () {
             * @apiParam {Number} [limit] Optional Limit of results.
             *
             * @apiSuccess {Object[]} comments List of comment.
+            * @apiSuccess {String} comment.id Id of the comment.
             * @apiSuccess {String} comment.author Author of the comment.
-            * @apiSuccess {String} comment.text Text of the comment.            
+            * @apiSuccess {String} comment.text Text of the comment.
+            * @apiSuccess {String} comment.created_at Date of the comment.          
             */
             Route::get('', function ($id, Request $request)    {
                 $post = Post::find($id);
@@ -118,8 +122,9 @@ Route::group(['prefix' => 'v1'], function () {
                     return response()->json(['error' => 'Post Not found' ],404);
                 }
 
-                $builder = Comment::query()->select('author','text','created_at')
-                                            ->where('post_id','=',$id);
+                $builder = Comment::query()->select('id', 'author','text','created_at')
+                                            ->where('post_id','=',$id)
+                                            ->orderBy('created_at', 'DESC');
 
                 if ($request->has('offset'))
                         $builder = $builder->skip(intval($request->get('offset')));

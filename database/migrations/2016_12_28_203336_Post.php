@@ -17,6 +17,7 @@ class Post extends Migration
             $table->increments('id');
             $table->text('title');
             $table->text('subtitle');
+            $table->text('image');
             $table->longText('content');
             $table->integer('category_id');
             $table->text('tags');

@@ -33,7 +33,8 @@ class PostSeeder extends Seeder
 	        DB::table(with(new Post)->getTable())->insert([
 	            'title' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	            'subtitle' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-	            'content' => $faker->paragraph($nbSentences = 3, $variableNbSentences = true),
+                'image' => $faker->imageUrl($width = 1568, $height = 588),
+                'content' => file_get_contents(__DIR__ .'/markdown-examples/'.$faker->numberBetween($min = 1, $max = 2).'.md'),
                 'category_id' => Category::inRandomOrder()->first()->id,
                 'tags' => $faker->word().','.$faker->word().','.$faker->word(),
                 'created_at' => $faker->dateTime($max = 'now', $timezone = date_default_timezone_get()),
