@@ -152,7 +152,7 @@ Route::group(['prefix' => 'v1'], function () {
             */
             Route::post('', function ($id, Request $request)    {
 
-                $validator = Validator::make($request->all(), [
+                $validator = Validator::make(array_merge($request->all(),['postid'=>$id]), [
                     'author' => 'required',
                     'text' => 'required',
                     'postid' => 'required|numeric|exists:'.with(new Post)->getTable().',id',
@@ -163,7 +163,7 @@ Route::group(['prefix' => 'v1'], function () {
                 }else{
                     $author = strip_tags($request->get('author'));
                     $text = strip_tags($request->get('text'));
-                    $postId = $request->get('postid');
+                    $postId = $id;
                     
                     $comment = new Comment();
                     $comment->author = $author;
