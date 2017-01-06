@@ -34,6 +34,13 @@ define({ "api": [
             "group": "Success 200",
             "type": "String",
             "optional": false,
+            "field": "category.sluged_title",
+            "description": "<p>Sluged itle of the Category.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
             "field": "category.description",
             "description": "<p>Description of the Category.</p>"
           }
@@ -55,10 +62,10 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": true,
             "field": "category",
-            "description": "<p>Optional Category ID.</p>"
+            "description": "<p>Optional Category Id or slug.</p>"
           },
           {
             "group": "Parameter",
@@ -148,16 +155,16 @@ define({ "api": [
     "title": "Request Post By Id",
     "version": "1.0.0",
     "group": "Post",
-    "name": "GetPostById",
+    "name": "GetPostByIdOrSlug",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
             "optional": false,
             "field": "id",
-            "description": "<p>Category ID.</p>"
+            "description": "<p>Post Id or slug.</p>"
           }
         ]
       }

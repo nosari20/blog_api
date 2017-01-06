@@ -18,20 +18,24 @@ class PostSeeder extends Seeder
     {
         $faker = Faker::create();
         $nb_categories = 5;
-        $nb_posts = 10;
-        $nb_comments = 50;
+        $nb_posts = 30;
+        $nb_comments = 80;
 
         foreach (range(1,$nb_categories) as $index) {
+            $title = $faker->word();
             DB::table(with(new Category)->getTable())->insert([
-	            'title' => $faker->word(),
+	            'title' => $title,
+                'sluged_title'  => str_slug($title, '-'),
 	            'description' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	        ]);
         }
 
 
     	foreach (range(1,$nb_posts) as $index) {
+            $title = $faker->sentence($nbWords = 6, $variableNbWords = true);
 	        DB::table(with(new Post)->getTable())->insert([
-	            'title' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+	            'title' => $title,
+                'sluged_title'  => str_slug($title, '-').'-'.uniqid(),
 	            'subtitle' => $faker->sentence($nbWords = 6, $variableNbWords = true),
                 'image' => $faker->imageUrl($width = 1568, $height = 588),
                 'content' => file_get_contents(__DIR__ .'/markdown-examples/'.$faker->numberBetween($min = 1, $max = 2).'.md'),

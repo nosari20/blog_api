@@ -29,6 +29,7 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiSuccess {Object[]} categories List of categories.
         * @apiSuccess {Number} category.id Id of the Category.
         * @apiSuccess {String} category.title Title of the Category.
+        * @apiSuccess {String} category.sluged_title Sluged itle of the Category.
         * @apiSuccess {String} category.description Description of the Category.
         */
         Route::get('', function (Request $request)    {
@@ -43,7 +44,7 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiGroup Post
         * @apiName GetPost        
         *
-        * @apiParam {Number} [category] Optional Category ID.
+        * @apiParam {String} [category] Optional Category Id or slug.
         * @apiParam {Number} [offset] Optional Offset of results.
         * @apiParam {Number} [limit] Optional Limit of results.
         *
@@ -57,10 +58,17 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiSuccess {DateTime} post.updated_at Date and time of the last update of the Post.
         */
         Route::get('', function (Request $request)    {
-            $builder = Post::query()->select('id','title', 'subtitle', 'category_id', 'created_at', 'updated_at');
+            $builder = Post::query()->select('id','title','sluged_title', 'subtitle', 'category_id', 'created_at', 'updated_at');
 
-            if ($request->has('category'))
-                $builder = $builder->where('category_id','=',$request->get('category'));
+            if ($request->has('category')){
+                if(intval($request->get('category'))>0){
+                    $builder = $builder->where('category_id','=',$request->get('category'));
+                }else{
+                    $category = Category::where('sluged_title','=',$request->get('category'))->first();
+                    $builder = $builder->where('category_id','=',$category->id);                    
+                }
+            }
+                
 
             if ($request->has('offset'))
                     $builder = $builder->skip(intval($request->get('offset')));
@@ -77,9 +85,9 @@ Route::group(['prefix' => 'v1'], function () {
         * @api {get} /posts/:id Request Post By Id
         * @apiVersion 1.0.0
         * @apiGroup Post
-        * @apiName GetPostById        
+        * @apiName GetPostByIdOrSlug      
         *
-        * @apiParam {Number} id Category ID.
+        * @apiParam {String} id Post Id or slug.
         *
         * @apiSuccess {Number} id Id of the Post.
         * @apiSuccess {String} title Title of the Post.
@@ -92,7 +100,12 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiError {DateTime} error Description of the error.
         */
         Route::get('{id}', function ($id,Request $request)    {
-            $post = Post::find($id);
+            if(intval($id)>0){
+                $post = Post::find($id);
+            }else{
+                $post = Post::where('sluged_title','=',$id)->first();
+            }
+            
             if($post){
                 return response()->json($post);
             }else{
