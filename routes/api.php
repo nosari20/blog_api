@@ -53,32 +53,57 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiSuccess {String} post.title Title of the Post.
         * @apiSuccess {String} post.subtitle Subtitle of the Post.
         * @apiSuccess {String} post.content Content of the Post.
-        * @apiSuccess {Number} post.category_id Category ID of the Post.
+        * @apiSuccess {Object} post.category Category of the Post.
+        * @apiSuccess {Number} post.category.id Id of the Category.
+        * @apiSuccess {String} post.category.title Title of the Category.
+        * @apiSuccess {String} post.category.sluged_title Sluged Title of the Category.
+        * @apiSuccess {String} post.category.description Description of the Category.
         * @apiSuccess {DateTime} post.created_at Date and time of the creation of the Post.
         * @apiSuccess {DateTime} post.updated_at Date and time of the last update of the Post.
         */
         Route::get('', function (Request $request)    {
+            $http_code = 200;
             $builder = Post::query()->select('id','title','sluged_title', 'subtitle', 'category_id', 'created_at', 'updated_at');
 
             if ($request->has('category')){
                 if(intval($request->get('category'))>0){
-                    $builder = $builder->where('category_id','=',$request->get('category'));
+                    $category = Category::find($request->get('category'));
                 }else{
-                    $category = Category::where('sluged_title','=',$request->get('category'))->first();
-                    $builder = $builder->where('category_id','=',$category->id);                    
+                    $category = Category::where('sluged_title','=',$request->get('category'))->first();                
+                }
+
+                if(!$category){
+                    return response()->json(['error' => 'Category does not exsit' ], 406);
+                }else{
+                    $builder = $builder->where('category_id','=',$category->id);            
                 }
             }
                 
 
-            if ($request->has('offset'))
-                    $builder = $builder->skip(intval($request->get('offset')));
+            if ($request->has('offset')){                    
+                    if(intval($request->get('offset')) < 0){
+                        return response()->json(['error' => 'Negative offset' ], 406);
+                    }else{
+                        $builder = $builder->skip(intval($request->get('offset')));
+                        $http_code = 206;
+                    }
+            }
 
-            if ($request->has('limit'))
-                    $builder = $builder->take(intval($request->get('limit')));
+            if ($request->has('limit')){
+                    if(intval($request->get('limit')) < 0){
+                        return response()->json(['error' => 'Negative offset' ], 406);
+                    }else{
+                        $builder = $builder->skip(intval($request->get('offset')));
+                        $http_code = 206;
+                    }
+            }
             
 
 
-            return response()->json($builder->get());
+            $result = $builder->get()->map(function($post){
+                return $post->full();
+            });
+            return response()->json($result, $http_code);
         });
 
         /**
@@ -93,7 +118,11 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiSuccess {String} title Title of the Post.
         * @apiSuccess {String} subtitle Subtitle of the Post.
         * @apiSuccess {String} content Content of the Post.
-        * @apiSuccess {Number} category_id Category ID of the Post.
+        * @apiSuccess {Object} post.category Category of the Post.
+        * @apiSuccess {Number} post.category.id Id of the Category.
+        * @apiSuccess {String} post.category.title Title of the Category.
+        * @apiSuccess {String} post.category.sluged_title Sluged Title of the Category.
+        * @apiSuccess {String} post.category.description Description of the Category.
         * @apiSuccess {DateTime} created_at Date and time of the creation of the Post.
         * @apiSuccess {DateTime} updated_at Date and time of the last update of the Post.
         *
@@ -107,7 +136,7 @@ Route::group(['prefix' => 'v1'], function () {
             }
             
             if($post){
-                return response()->json($post);
+                return response()->json($post->full());
             }else{
                 return response()->json(['error' => 'Post Not found' ],404);
             }
