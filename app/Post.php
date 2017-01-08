@@ -3,9 +3,26 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\SearchableTrait;
 
 class Post extends Model
 {
+    use SearchableTrait;
+    
+    protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'title' => 10,
+            'subtitle' => 10,
+            'content' => 2,
+        ]
+    ];
     //
 
     public function category(){
@@ -21,11 +38,9 @@ class Post extends Model
 
     }
 
-    public function search($search){
-
-        return $this->where('title', 'LIKE', "%{$search}%")
-                    ->orWhere('subtitle', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%");
-
+    public function scopeMini($query)
+    {
+        return $query->select(array('id','title','sluged_title', 'subtitle', 'category_id', 'created_at', 'updated_at'));
     }
+    
 }

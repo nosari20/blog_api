@@ -80,6 +80,13 @@ define({ "api": [
             "optional": true,
             "field": "limit",
             "description": "<p>Optional Limit of results.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "query",
+            "description": "<p>Optional Query string.</p>"
           }
         ]
       }
@@ -230,10 +237,38 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "post.category",
+            "description": "<p>Category of the Post.</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Number",
             "optional": false,
-            "field": "category_id",
-            "description": "<p>Category ID of the Post.</p>"
+            "field": "post.category.id",
+            "description": "<p>Id of the Category.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "post.category.title",
+            "description": "<p>Title of the Category.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "post.category.sluged_title",
+            "description": "<p>Sluged Title of the Category.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "post.category.description",
+            "description": "<p>Description of the Category.</p>"
           },
           {
             "group": "Success 200",

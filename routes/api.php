@@ -47,6 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
         * @apiParam {String} [category] Optional Category Id or slug.
         * @apiParam {Number} [offset] Optional Offset of results.
         * @apiParam {Number} [limit] Optional Limit of results.
+        * @apiParam {String} [query] Optional Query string.
         *
         * @apiSuccess {Object[]} posts List of posts.
         * @apiSuccess {Number} post.id Id of the Post.
@@ -63,7 +64,12 @@ Route::group(['prefix' => 'v1'], function () {
         */
         Route::get('', function (Request $request)    {
             $http_code = 200;
-            $builder = Post::query()->select('id','title','sluged_title', 'subtitle', 'category_id', 'created_at', 'updated_at');
+            
+            if ($request->has('query')){
+                $builder = Post::search($request->get('query'))->mini();
+            }else{
+                $builder = Post::mini();
+            }            
 
             if ($request->has('category')){
                 if(intval($request->get('category'))>0){
@@ -98,8 +104,7 @@ Route::group(['prefix' => 'v1'], function () {
                     }
             }
             
-
-
+            
             $result = $builder->get()->map(function($post){
                 return $post->full();
             });
