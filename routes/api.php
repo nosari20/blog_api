@@ -99,7 +99,7 @@ Route::group(['prefix' => 'v1'], function () {
                     if(intval($request->get('limit')) < 0){
                         return response()->json(['error' => 'Negative offset' ], 406);
                     }else{
-                        $builder = $builder->skip(intval($request->get('offset')));
+                        $builder = $builder->take(intval($request->get('limit')));
                         $http_code = 206;
                     }
             }
