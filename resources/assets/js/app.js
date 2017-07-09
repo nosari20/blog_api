@@ -6,6 +6,7 @@
  */
 
 require('./bootstrap');
+require('material-design-lite');
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

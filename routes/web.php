@@ -11,14 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return Redirect::to('/apidoc/index.html');
-});
-
 Auth::routes();
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
+Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/','AdminController@index');
 

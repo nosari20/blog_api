@@ -17,7 +17,12 @@ use Validator as Validator;
 |
 */
 
+Route::get('/', function () {
+    return Redirect::to('/apidoc/index.html');
+});
+
 Route::group(['prefix' => 'v1'], function () {
+    
 
     Route::group(['prefix' => 'categories'], function () {
         /**
