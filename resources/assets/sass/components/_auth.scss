@@ -1,0 +1,39 @@
+.auth{
+    height: 100vh;
+    text-align: center;
+    line-height: 100vh;
+
+    .auth-center{
+        display: inline-block;
+        vertical-align: middle;
+
+        .mdl-card__supporting-text{
+            width: 100%;
+        }
+    }
+
+    &:before{
+        height: 50%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #00bcd4;
+        content: "";
+        z-index: 0;
+    }
+
+}
+
+.auth{
+    .login{
+
+        .mdl-switch{
+            width: auto;
+            .mdl-switch__label{
+                left: auto;
+                padding-left: 24px;
+            }
+        }
+    }
+}
